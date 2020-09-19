@@ -1,0 +1,33 @@
+@page "/"
+@inject OnlineStateService OnlineStateService
+
+<div>
+    Current online state: @IsOnline
+</div>
+
+@code {
+    public bool IsOnline { get; set; }
+
+    public void OnOnline(object sender, EventArgs args)
+    {
+        IsOnline = true;
+        System.Diagnostics.Debug.Print("You are now online!");
+    }
+
+    public void OnOffline(object sender, EventArgs args)
+    {
+        IsOnline = false;
+        System.Diagnostics.Debug.Print("You are now offline!");
+    }
+
+    protected override void OnInitialized()
+    {
+        OnlineStateService.Online += OnOnline;
+        OnlineStateService.Offline += OnOffline;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsOnline = await OnlineStateService.IsOnline();
+    }
+}
