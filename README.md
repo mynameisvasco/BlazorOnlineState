@@ -59,7 +59,6 @@ This package provides Blazor applications with access to an improved version of 
    window.IsOnline = async () => {
      if (window.navigator.onLine) {
        const req = await fetch("https://icanhazip.com/");
-       console.log(req);
        return req.ok;
      }
      return window.navigator.onLine;
