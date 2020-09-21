@@ -1,6 +1,6 @@
 # 🌎 Blazor Online State
 
-This package provides Blazor applications with access to the browser's <a href="https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine">Online State API</a>
+This package provides Blazor applications with access to an improved version of the browser's <a href="https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine">Online State API</a>
 
 ## 📝 Usage
 
@@ -10,11 +10,7 @@ This package provides Blazor applications with access to the browser's <a href="
    dotnet add package BlazorOnlineState
    ```
 
-   
-
 2. In your Blazor app's `Startup.cs` (Server) or `Program.cs` (Client), register the 'OnlineStateService'.
-
-   
 
    - #### Server
 
@@ -22,7 +18,7 @@ This package provides Blazor applications with access to the browser's <a href="
      ...
      using BlazorOnlineState;
      ...
-     
+
      public void ConfigureServices(IServiceCollection services)
      {
          ...
@@ -31,15 +27,13 @@ This package provides Blazor applications with access to the browser's <a href="
      }
      ```
 
-     
-
    - #### Client
 
      ```c#
      ...
      using BlazorOnlineState;
      ...
-       
+
      public static async Task Main(string[] args)
      {
          ...
@@ -48,35 +42,38 @@ This package provides Blazor applications with access to the browser's <a href="
      }
      ```
 
-     
-
 3. Include the following javascript code into index.html inside www-root folder
 
    ```javascript
-   window.addEventListener("online", () => {
-   	DotNet.invokeMethodAsync('BlazorOnlineState', 'OnOnline');
+   window.addEventListener("online", async () => {
+     const req = await fetch("https://icanhazip.com/");
+     if (req.ok) {
+       DotNet.invokeMethodAsync("BlazorOnlineState", "OnOnline");
+     }
    });
-   
-   window.addEventListener("offline", () => {
-   	DotNet.invokeMethodAsync('BlazorOnlineState', 'OnOffline');
-   });
-   
-   window.IsOnline = () => window.navigator.onLine;
-   ```
 
-   
+   window.addEventListener("offline", () => {
+     DotNet.invokeMethodAsync("BlazorOnlineState", "OnOffline");
+   });
+
+   window.IsOnline = async () => {
+     if (window.navigator.onLine) {
+       const req = await fetch("https://icanhazip.com/");
+       console.log(req);
+       return req.ok;
+     }
+     return window.navigator.onLine;
+   };
+   ```
 
 4. Now you can inject the OnlineService into any Blazor page!
 
-
-
 ## 💁🏼‍♂️ Author
 
-Vasco Sousa 
+Vasco Sousa
 
 🌐 <a href="https://vasco.pw">Visit Website</a>
 
 💰<a href="https://paypal.me/mynameisvascosousa">Donate</a>
 
 📧 <a href="mailto:myemailvasco@gmail.com">Send Email</a>
-

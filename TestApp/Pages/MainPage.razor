@@ -8,16 +8,21 @@
 @code {
     public bool IsOnline { get; set; }
 
-    public void OnOnline(object sender, EventArgs args)
+    public void OnOnline()
     {
-        IsOnline = true;
-        System.Diagnostics.Debug.Print("You are now online!");
+        Task.Run(async () =>
+        {
+            IsOnline = await OnlineStateService.IsOnline();
+            StateHasChanged();
+            System.Diagnostics.Debug.Print("You are now online!");
+        });
     }
 
-    public void OnOffline(object sender, EventArgs args)
+    public void OnOffline()
     {
         IsOnline = false;
         System.Diagnostics.Debug.Print("You are now offline!");
+        StateHasChanged();
     }
 
     protected override void OnInitialized()
